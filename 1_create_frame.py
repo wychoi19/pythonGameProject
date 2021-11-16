@@ -7,6 +7,12 @@ pygame.init()
 screen_width = 480
 screen_height = 640
 
+#캐릭터 이동 속도
+speed = 0.6
+
+#FPS (프레임 수)
+clock = pygame.time.Clock()
+
 screen = pygame.display.set_mode((screen_width, screen_height));
 
 #화면 title
@@ -14,8 +20,6 @@ pygame.display.set_caption("나도 게임");
 
 #배경 이미지 설정
 background = pygame.image.load("D:/python_workspace/pythonGameProject/background.png");
-
-
 
 # 캐릭터 불러오기(스프라이트)
 character = pygame.image.load("D:/python_workspace/pythonGameProject/character.png");
@@ -32,6 +36,7 @@ to_y = 0
 # 이벤트 루프
 running = True #게임이 진행중인가? 
 while running:
+    dt = clock.tick(60) #30프레임으로 설정(초당)
     #사용자의 키보드나 마우스의 움직임을 체크한다.
     for event in pygame.event.get(): 
         #종료 이벤트 발생시 while 문 종료 (우측의 X버튼) => 이 부분이 없는 경우는 창이 꺼지지 않아 작업관리자에서 종료해줘야함.
@@ -40,13 +45,13 @@ while running:
 
         if event.type == pygame.KEYDOWN: #키 눌려짐 체크
             if event.key == pygame.K_LEFT: #왼쪽
-                to_x -= 0.5
+                to_x -= speed
             elif event.key == pygame.K_RIGHT: #오른쪽
-                to_x += 0.5
+                to_x += speed
             elif event.key == pygame.K_UP: #위
-                to_y -= 0.5
+                to_y -= speed
             elif event.key == pygame.K_DOWN: #아래
-                to_y += 0.5
+                to_y += speed
         
         if event.type == pygame.KEYUP: #키를 누르는 상태가 아닌경우 움직이지 않음
             if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
@@ -54,8 +59,8 @@ while running:
             elif event.key == pygame.K_UP or event.key == pygame.K_DOWN:
                 to_y = 0
 
-    character_x_pos += to_x
-    character_y_pos += to_y
+    character_x_pos += to_x * dt
+    character_y_pos += to_y * dt
 
     #경계값 처리
     if character_x_pos < 0 :
