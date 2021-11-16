@@ -42,6 +42,14 @@ enemy_y_pos = screen_height/2-enemy_height/2
 to_x = 0
 to_y = 0
 
+#폰트 정의
+game_font = pygame.font.Font(None, 40)
+
+#총 시간 표시
+total_time = 10
+#시간 계산
+start_ticks = pygame.time.get_ticks() #현재 tick
+
 # 이벤트 루프
 running = True #게임이 진행중인가? 
 while running:
@@ -100,6 +108,19 @@ while running:
     screen.blit(character, (character_x_pos, character_y_pos))
     #적 그리기
     screen.blit(enemy, (enemy_x_pos, enemy_y_pos))
+
+    #타이머 추가 (경과 시간 계산)
+    elapse_time = (pygame.time.get_ticks() - start_ticks)/1000 #단위가 밀리초
+
+    #초 기준 역순으로 숫자가 출력되게 만든다.
+    timer = game_font.render(str(int(total_time-elapse_time)), True, (255,255,255))
+
+    #시간정보 그리기
+    screen.blit(timer, (10,10))
+
+    if total_time-elapse_time < 0:
+        running = False
+
     #화면 새로 그리기 작업
     pygame.display.update();
 
