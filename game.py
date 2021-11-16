@@ -10,6 +10,7 @@ screen_height = 640
 #캐릭터 이동 속도
 speed = 0.6
 
+
 #FPS (프레임 수)
 clock = pygame.time.Clock()
 
@@ -28,6 +29,14 @@ character_width = character_size[0]
 character_height = character_size[1]
 character_x_pos = screen_width/2
 character_y_pos = screen_height-character_height
+
+#적 캐릭터
+enemy = pygame.image.load("D:/python_workspace/pythonGameProject/enemy.png");
+enemy_size = enemy.get_rect().size #이미지의 크기
+enemy_width = enemy_size[0] 
+enemy_height = enemy_size[1]
+enemy_x_pos = screen_width/2-enemy_width/2
+enemy_y_pos = screen_height/2-enemy_height/2
 
 #이동할 좌표
 to_x = 0
@@ -72,11 +81,25 @@ while running:
     if character_y_pos >= (screen_height-character_height):
         character_y_pos = screen_height-character_height
 
+    #충돌처리
+    character_rect = character.get_rect();
+    character_rect.left = character_x_pos
+    character_rect.top = character_y_pos
+
+    enemy_rect = enemy.get_rect();
+    enemy_rect.left = enemy_x_pos
+    enemy_rect.top = enemy_y_pos
+
+    #충돌체크
+    if character_rect.colliderect(enemy_rect):
+        running = False
 
     #배경 설정 (x, y좌표)
     screen.blit(background, (0,0))
     #캐릭터 그리기
     screen.blit(character, (character_x_pos, character_y_pos))
+    #적 그리기
+    screen.blit(enemy, (enemy_x_pos, enemy_y_pos))
     #화면 새로 그리기 작업
     pygame.display.update();
 
