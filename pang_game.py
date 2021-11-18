@@ -51,19 +51,33 @@ weapons = []
 #무기 속도
 weapon_speed = 10
 
-#################################공 만들기###########################################
-
-
-
+#################################공 만들기(4개)###########################################
+ball_images = [
+    pygame.image.load(current_path+"/img/balloon1.png"),
+    pygame.image.load(current_path+"/img/balloon2.png"),
+    pygame.image.load(current_path+"/img/balloon3.png"),
+    pygame.image.load(current_path+"/img/balloon4.png")
+]
+#공의 크기에 따른 속도차이가 있음
+ball_speed_y = [-18, -15, -12, -9]
+#공 정보
+balls = []
+balls.append({
+    "pos_x" : 50,
+    "pos_y" : 50,
+    "img_idx" : 0, #어떤 공을 사용할지?
+    "to_x":3,
+    "to_y":-6,
+    "init_spd_y":0 #최초 속도 선택 
+})
 #################################이벤트 루프#########################################
 
-running = True #게임이 진행중인가? 
+running = True 
 while running:
-    dt = clock.tick(30) #30프레임으로 설정(초당)
-    #사용자의 키보드나 마우스의 움직임을 체크한다.
+    dt = clock.tick(30)
+    ################################# 키보드 이벤트 #########################################
     for event in pygame.event.get(): 
-        #종료 이벤트 발생시 while 문 종료 (우측의 X버튼) => 이 부분이 없는 경우는 창이 꺼지지 않아 작업관리자에서 종료해줘야함.
-        if event.type == pygame.QUIT: 
+        if event.type == pygame.QUIT: #윈도우 기준 우측 상단 X 버튼을 눌렀을 경우
            running = False 
 
         if event.type == pygame.KEYDOWN: #키 눌려짐 체크
@@ -79,6 +93,7 @@ while running:
             if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                 to_x = 0
 
+    ################################## 위치 적용 ##########################################
     #캐릭터 위치 설정
     character_x_pos += to_x
 
@@ -88,25 +103,23 @@ while running:
     if character_x_pos >= (screen_width-character_width):
         character_x_pos = screen_width-character_width
 
-    #충돌처리
+    ################################## 충돌 처리 ##########################################
 
-    #배경 설정 (x, y좌표)
+    ################################# 화면에 그리기 #########################################
     screen.blit(background, (0,0))
-    #무기 그리기
     for weapon_x_pos, weapon_y_pos in weapons:
         print(weapon, weapon_x_pos, weapon_y_pos)
         screen.blit(weapon, (weapon_x_pos, weapon_y_pos))
-    #배경 설정 (x, y좌표)
     screen.blit(stage, (0,screen_height-stage_height))
-    #캐릭터 그리기
     screen.blit(character, (character_x_pos, character_y_pos))
     
-    
+    ################################## 무기 이동 ##########################################
     #무기 이동
     weapons = [[w[0], w[1] - weapon_speed] for w in weapons]
 
     # 무기가 화면을 벗어나면 사라지게
     weapons = [[w[0], w[1]] for w in weapons if w[1]>0 ]
+
     #화면 새로 그리기 작업
     pygame.display.update();
 
