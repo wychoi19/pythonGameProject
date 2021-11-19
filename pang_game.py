@@ -68,7 +68,7 @@ balls.append({
     "img_idx" : 0, #어떤 공을 사용할지?
     "to_x":3,
     "to_y":-6,
-    "init_spd_y":0 #최초 속도 선택 
+    "init_spd_y":ball_speed_y[0] #최초 속도 선택 
 })
 #################################이벤트 루프#########################################
 
@@ -110,6 +110,12 @@ while running:
     for weapon_x_pos, weapon_y_pos in weapons:
         print(weapon, weapon_x_pos, weapon_y_pos)
         screen.blit(weapon, (weapon_x_pos, weapon_y_pos))
+    for idx, val in enumerate(balls):
+        ball_pos_x = val["pos_x"]
+        ball_pos_y = val["pos_y"]
+        ball_img_idx = val["img_idx"]
+        screen.blit(ball_images[ball_img_idx], (ball_pos_x, ball_pos_y))
+
     screen.blit(stage, (0,screen_height-stage_height))
     screen.blit(character, (character_x_pos, character_y_pos))
     
@@ -119,6 +125,30 @@ while running:
 
     # 무기가 화면을 벗어나면 사라지게
     weapons = [[w[0], w[1]] for w in weapons if w[1]>0 ]
+
+    ################################## 공 이동 ##########################################
+    for ball_idx, ball_val in enumerate(balls): #키 값을 세트로 추출하는 구문
+        ball_pos_x = ball_val["pos_x"]
+        ball_pos_y = ball_val["pos_y"]
+        ball_img_idx = ball_val["img_idx"]
+        ball_size = ball_images[ball_img_idx].get_rect().size
+        ball_width = ball_size[0]
+        ball_height = ball_size[1]
+
+        #공의 경계값 처리 (튕겨나가야한다) -> 좌우
+        if ball_pos_x < 0 or ball_pos_x > screen_width-ball_width:
+            ball_val["to_x"] = ball_val["to_x"]*-1
+        #공의 경계값 처리 (튕겨나가야한다) -> 스테이지에 튕김
+        if ball_pos_y > screen_height-stage_height-ball_width:
+            ball_val["to_y"] = ball_val["init_spd_y"]
+        else :
+            ball_val["to_y"] += 0.5
+        # 스테이지에서 튕겨 올라오는건 최초 속도 / 그리고 중력의 영향을 받아 속도가 준다. 
+        # 내려올때는 다시 속도를 증가하여 가속도를 표시한다.
+        
+        ball_val["pos_x"] += ball_val["to_x"]
+        ball_val["pos_y"] += ball_val["to_y"]
+
 
     #화면 새로 그리기 작업
     pygame.display.update();

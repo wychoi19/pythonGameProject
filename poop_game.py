@@ -28,10 +28,10 @@ screen = pygame.display.set_mode((screen_width, screen_height));
 pygame.display.set_caption("나도 게임");
 
 #배경 이미지 설정
-background = pygame.image.load("D:/python_workspace/pythonGameProject/background.png");
+background = pygame.image.load("D:/python_workspace/pythonGameProject/img/background.png");
 
 # 캐릭터 불러오기(스프라이트)
-character = pygame.image.load("D:/python_workspace/pythonGameProject/character.png");
+character = pygame.image.load("D:/python_workspace/pythonGameProject/img/character.png");
 character_size = character.get_rect().size #이미지의 크기
 character_width = character_size[0] 
 character_height = character_size[1]
@@ -39,7 +39,7 @@ character_x_pos = screen_width/2
 character_y_pos = screen_height-character_height
 
 #적 캐릭터
-enemy = pygame.image.load("D:/python_workspace/pythonGameProject/poop.png");
+enemy = pygame.image.load("D:/python_workspace/pythonGameProject/img/poop.png");
 enemy_size = enemy.get_rect().size #이미지의 크기
 enemy_width = enemy_size[0] 
 enemy_height = enemy_size[1]
