@@ -16,6 +16,8 @@ pygame.display.set_caption("Pang 게임");
 #FPS (프레임 수)
 clock = pygame.time.Clock()
 
+weapon_to_remove = -1
+ball_to_remove = -1
 
 ################################게임 설정########################################
 current_path = os.path.dirname(__file__) #현재 경로 반환
@@ -103,8 +105,6 @@ while running:
     if character_x_pos >= (screen_width-character_width):
         character_x_pos = screen_width-character_width
 
-    ################################## 충돌 처리 ##########################################
-
     ################################# 화면에 그리기 #########################################
     screen.blit(background, (0,0))
     for weapon_x_pos, weapon_y_pos in weapons:
@@ -118,6 +118,50 @@ while running:
 
     screen.blit(stage, (0,screen_height-stage_height))
     screen.blit(character, (character_x_pos, character_y_pos))
+    
+    ################################## 충돌 처리 ##########################################
+
+    # 캐릭터와 공
+    character_rect = character.get_rect()
+    character_rect.left = character_x_pos
+    character_rect.top = character_y_pos
+
+    for idx, val in enumerate(balls):
+        ball_pos_x = val["pos_x"]
+        ball_pos_y = val["pos_y"]
+        ball_img_idx = val["img_idx"]
+        ball_rect = ball_images[ball_img_idx].get_rect()
+        ball_rect.left = ball_pos_x
+        ball_rect.top = ball_pos_y
+
+        if character_rect.colliderect(ball_rect):
+            running=False
+            break
+
+        #무기들과 공
+        for weapon_idx, weapon_val in enumerate(weapons):
+            weapon_pos_x = weapon_val[0]
+            weapon_pos_y = weapon_val[1]
+
+            weapon_rect = weapon.get_rect()
+            weapon_rect.left = weapon_pos_x
+            weapon_rect.top = weapon_pos_y
+
+            if weapon_rect.colliderect(ball_rect):
+                #충돌시 무기와 공 제거.
+                weapon_to_remove = weapon_idx
+                ball_to_remove = idx
+                break
+    
+    #충돌된 아이템 제거
+    if ball_to_remove > -1:
+        del balls[ball_to_remove]
+        ball_to_remove = -1
+    
+    if weapon_to_remove > -1:
+        del weapons[weapon_to_remove]
+        weapon_to_remove = -1
+
     
     ################################## 무기 이동 ##########################################
     #무기 이동
